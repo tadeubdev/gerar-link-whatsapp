@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Link Whatsapp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        html, body {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <main class="d-flex h-100 align-items-center justify-content-center px-5">
+        <form action="" id="form-gerar-link">
+            <h4 class="display-4 fw-bold mb-0 text-center">Gerar link de whatsapp</h4>
+            <div class="lead mb-5 text-center">
+                <p>
+                    Insira o número do destinatário com DDD e a mensagem que deseja enviar, <br>
+                    clique em "Gerar link" e o link será copiado para a área de transferência.
+                </p>
+            </div>
+            <div class="form-group">
+                <input type="text" name="number" id="number" class="form-control" placeholder="DDD + Número">
+            </div>
+            <div class="form-group my-2">
+                <textarea name="message" id="message" class="form-control" placeholder="Mensagem"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Gerar link</button>
+            </div>
+            <div class="d-none mt-4 alert alert-info" id="alerta">
+                <p>Link copiado para a área de transferência! <a href="link" target="_blank">link</a></p>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        const form = document.getElementById('form-gerar-link');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let number = document.getElementById('number').value;
+            number = number.replace(/\D/g, '');
+            number = number.indexOf('55') === 0 ? number : `55${number}`;
+            const message = document.getElementById('message').value;
+            const text = message? `&text=${message}` : '';
+            const link = `https://api.whatsapp.com/send?phone=${number}${text}`;
+            // copy link to clipboard
+            const el = document.createElement('textarea');
+            el.value = link;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            // show alert
+            const alerta = document.getElementById('alerta');
+            alerta.classList.remove('d-none');
+            alerta.querySelector('a').setAttribute('href', link);
+            alerta.querySelector('a').innerHTML = link;
+        });
+    </script>
+</body>
+</html>
